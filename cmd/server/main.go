@@ -6,7 +6,6 @@ import (
 	"os" // 新增
 )
 
-// 见鬼了，这个文件是干嘛的？
 func main() {
 	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "pong")
@@ -21,6 +20,6 @@ func main() {
 		fmt.Fprintf(w, "app_name=%s", app)
 	})
 
-	http.ListenAndServe(":8080", nil)
 	fmt.Println("HTTP server listening on :8080...")
+	http.ListenAndServe(":8080", nil)
 }
