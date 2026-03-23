@@ -21,7 +21,6 @@ func main() {
 		fmt.Fprintf(w, "app_name=%s", app)
 	})
 
-	fmt.Println("Server starting on :8080...")
 	http.ListenAndServe(":8080", nil)
-	fmt.Println("Server starting on port 8080...")
+	fmt.Println("HTTP server listening on :8080...")
 }
