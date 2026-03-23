@@ -1,25 +1,51 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
 	"net/http"
-	"os" // 新增
+	"os"
 )
 
+type Config struct {
+	AppName string `json:"app_name"`
+	Port    string `json:"port"`
+}
+
+func loadConfig() Config {
+	appName := os.Getenv("APP_NAME")
+	if appName == "" {
+		appName = "go-k8s-minimal"
+	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	return Config{
+		AppName: appName,
+		Port:    port,
+	}
+}
+
 func main() {
+	cfg := loadConfig()
+
 	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "pong")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("pong"))
 	})
 
-	// 新增接口
 	http.HandleFunc("/config", func(w http.ResponseWriter, r *http.Request) {
-		app := os.Getenv("APP_NAME")
-		if app == "" {
-			app = "default-app"
-		}
-		fmt.Fprintf(w, "app_name=%s", app)
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(cfg)
 	})
 
-	fmt.Println("HTTP server listening on :8080...")
-	http.ListenAndServe(":8080", nil)
+	addr := ":" + cfg.Port
+	log.Printf("server starting at %s, app=%s", addr, cfg.AppName)
+
+	if err := http.ListenAndServe(addr, nil); err != nil {
+		log.Fatal(err)
+	}
 }
