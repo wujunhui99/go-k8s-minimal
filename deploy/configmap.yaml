@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-k8s-minimal-config
+data:
+  APP_NAME: "new-go-k8s-minimal-dev"
+  PORT: "8080"
