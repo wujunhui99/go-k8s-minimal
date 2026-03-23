@@ -5,4 +5,4 @@ requiremnts.md
 .idea/
 .vscode/
 # 二进制文件
-server
+/server
